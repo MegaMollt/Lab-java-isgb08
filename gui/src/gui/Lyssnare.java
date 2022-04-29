@@ -6,6 +6,8 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
+import javax.swing.JButton;
+
 public class Lyssnare extends WindowAdapter implements ActionListener {
 	private GUI g; 
 	Fordonsregister fordonsregister = new Fordonsregister();
@@ -14,8 +16,8 @@ public class Lyssnare extends WindowAdapter implements ActionListener {
 	g=gIn;
 	}
 	public void actionPerformed(ActionEvent e) {
-			
-			
+				JButton knapp = (JButton)e.getSource();
+				if (knapp.getText().equals("Add Car")) {
 
 				String namn, type, brand, registrationNr, age;
 				int age1;
@@ -35,6 +37,11 @@ public class Lyssnare extends WindowAdapter implements ActionListener {
 				for (int pos = 0; pos<(fordonsregister.size()); pos++){ 
 					g.printRegistry(fordonsregister.skrivUt(pos).getAllt());
 					}
+				}
+				else if(knapp.getText().equals("Remove Car")){
+					
+					
+				}
 
 
 
