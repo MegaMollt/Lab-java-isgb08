@@ -1,0 +1,86 @@
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import javax.swing.*;
+
+public class Lyssnare extends WindowAdapter implements ActionListener {
+	Fordonsregister cars = new Fordonsregister(); 
+	private GUI g;
+    
+    public Lyssnare(GUI gIn) {				
+       g=gIn;
+    }
+    
+    public void actionPerformed(ActionEvent e) {
+    	JButton knapp = (JButton)e.getSource();
+    	if (knapp.getText().equals("Lägg till")) {
+    		System.out.println("Lägg till");
+    		
+    		String namn=g.gettextName();
+    		String age=g.gettextAge();
+    		int alder = Integer.parseInt(age);
+    		String pos=g.gettextPos();
+    		int plats = Integer.parseInt(pos);
+    		String typ=g.gettextTyp();
+    		String marke=g.gettextBrand();
+    		String nr=g.gettextReg();
+    		
+    		//från gamla versionen men med nya namnen på variabler
+    		if (cars.size()<cars.maxSize()) {		
+				Person agare = new Person(namn, alder);		
+				cars.add(nr, marke, typ, agare);		
+				}
+    		
+    		
+    	}
+    	else if (knapp.getText().equals("Ta bort")) {
+    		System.out.println("Ta bort ett fordon");
+			System.out.print("Det finns poster på plats 0 till och med " + (cars.size()));
+			System.out.print("\nAnge position för fordon som skall tas bort: ");
+			String pos=g.gettextPos();
+    		int plats = Integer.parseInt(pos);
+			if (0 <=plats && plats < cars.size()){
+			cars.remove(plats);	
+			}
+			else {
+    			System.out.println("Det saknas fordon på den positionen");
+    		}
+    	}
+			
+    	else if (knapp.getText().equals("Aktuellt fordon")) {
+    		System.out.println("Information om fordon");
+			System.out.print("Det finns poster på plats 0 till och med " + (cars.size()));
+			System.out.print("\nAnge position för det fordon du önskar information om: ");
+			String pos=g.gettextPos();
+    		int plats = Integer.parseInt(pos);							
+    		if (0 <=plats && plats < cars.size()){
+			System.out.println(cars.getFordon(plats).getAllt());		
+    		}
+    		else {
+    			System.out.println("Det saknas fordon på den positionen");
+    		}
+    	}
+    	
+    	else if (knapp.getText().equals("Skriv alla")) {
+    		System.out.println("Hela fordonsregistret");
+    		String pos=g.gettextPos();
+    		int plats = Integer.parseInt(pos);
+			for (plats = 0; plats<(cars.size()); plats++){ 
+				System.out.println(cars.skrivUt(plats).getAllt());	
+				}
+    	}
+    	
+    	else {
+    		System.out.println("Felaktigt val");
+    	}
+ 
+    	
+    }
+  
+    
+    public void windowClosing (WindowEvent e) {
+        System.out.println("Hej då");
+        System.exit(1);
+    }
+} 
