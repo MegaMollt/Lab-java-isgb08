@@ -1,0 +1,97 @@
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import javax.swing.*;
+
+public class Lyssnare extends WindowAdapter implements ActionListener {
+	Fordonsregister cars = new Fordonsregister(); 
+	private GUI g;
+    
+    public Lyssnare(GUI gIn) {				//Skickar med egenskaperna från min konstruktor i Granssnitt, getfunktionerna når vi genom g nu.
+       g=gIn;
+    }
+    
+    public void actionPerformed(ActionEvent e) {
+    	JButton knapp = (JButton)e.getSource();
+    	if (knapp.getText().equals("Lägg till")) {
+    		//Lägg till fordon
+    		
+    		
+    		String namn=g.gettextName();
+    		String age=g.gettextAge();
+    		int alder = Integer.parseInt(age);
+    		String typ=g.gettextTyp();
+    		String marke=g.gettextBrand();
+    		String nr=g.gettextReg();
+    		if((namn.isEmpty() || age.isEmpty() || typ.isEmpty() || marke.isEmpty() || nr.isEmpty())==false) {
+    		
+    														//från gamla versionen men med nya namnen på variabler
+    			if (cars.size()<cars.maxSize()) {		
+    				Person agare = new Person(namn, alder);		//kallar på konstruktor och skapar person
+    				cars.add(nr, marke, typ, agare);			//adderar
+    				g.printUt("Fordon tillagt\n");
+					}
+    			}
+    	else {
+    		g.printUt("Ange samtliga uppgifter om ägare och fordon först\n");
+    		}
+    		
+    		g.printRensaText();								//rensar textfält vid inmatning
+    	}
+    	else if (knapp.getText().equals("Ta bort")) {
+    		//Ta bort ett fordon
+
+			String pos=g.gettextPos();
+			if(pos.isEmpty()==false) {
+				int plats = Integer.parseInt(pos);
+				if (0 <=plats && plats < cars.size()){
+					cars.remove(plats);							//tar bort positionen
+					g.printUt("Fordon borttaget\n");
+				}
+				else {
+					g.printUt("Det saknas fordon angiven position\n");
+				}
+			}
+			else {
+				g.printUt("Skriv Fordon Nr först\n");
+			}
+    	}
+			
+    	else if (knapp.getText().equals("Aktuellt fordon")) {
+    		g.printUt("Information om fordon: \n");
+
+			String pos=g.gettextPos();
+			if(pos.isEmpty()==false) {									//om Fordon Nr är tomt
+				int plats = Integer.parseInt(pos);						//kan bara läsa texter, läser som ett heltal mha parseInt
+				if (0 <=plats && plats < cars.size()){
+					g.printUt("Fordon\n");	
+					g.printUt(cars.getFordon(plats).getAllt());
+				}
+				else {
+					g.printUt("Det saknas fordon på den positionen\n");	
+				}
+			}
+			else {
+				g.printUt("Skriv Fordon Nr först\n");
+			}
+    	}
+    	
+    	else if (knapp.getText().equals("Skriv alla")) {
+    		g.printUt("Hela fordonsregistret: \n");
+    		g.printRensa();												//tar bort tidigare data i rutan
+    		int plats = 0;
+			for (plats = 0; plats<(cars.size()); plats++){ 
+				g.printUt(cars.skrivUt(plats).getAllt()+ "\n");			//använder funktion för att skriva ut
+				}
+    	}	
+    	else {
+    		g.printUt("Felaktigt val\n");
+    	}
+    }
+  
+    public void windowClosing (WindowEvent e) {
+        System.out.println("Stänger registret");						//Skriver ut i konsol då programmet är stängt
+        System.exit(1);
+    }
+} 
