@@ -1,0 +1,92 @@
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import javax.swing.*;
+
+public class Lyssnare extends WindowAdapter implements ActionListener {
+	Fordonsregister cars = new Fordonsregister(); 
+	private GUI g;
+    
+    public Lyssnare(GUI gIn) {				//Skickar med egenskaperna från min konstruktor i Granssnitt, getfunktionerna når vi genom g nu.
+       g=gIn;
+    }
+    
+    public void actionPerformed(ActionEvent e) {
+    	JButton knapp = (JButton)e.getSource();
+    	if (knapp.getText().equals("Lägg till")) {
+    		System.out.println("Lägg till");
+    		
+    		String namn=g.gettextName();
+    		String age=g.gettextAge();
+    		int alder = Integer.parseInt(age);
+    		String typ=g.gettextTyp();
+    		String marke=g.gettextBrand();
+    		String nr=g.gettextReg();
+    		
+    														//från gamla versionen men med nya namnen på variabler
+    		if (cars.size()<cars.maxSize()) {		
+				Person agare = new Person(namn, alder);		//kallar på konstruktor och skapar person
+				cars.add(nr, marke, typ, agare);			//adderar
+			
+				}
+    		
+    		g.printRensaText();								//rensar textfält vid inmatning
+    	}
+    	else if (knapp.getText().equals("Ta bort")) {
+    		System.out.println("Ta bort ett fordon\n");
+
+			String pos=g.gettextPos();
+			if(pos.isEmpty()==false) {
+				int plats = Integer.parseInt(pos);
+				if (0 <=plats && plats < cars.size()){
+					cars.remove(plats);							//tar bort positionen
+					System.out.println("Fordon borttaget\n");
+				}
+				else {
+					System.out.println("Det saknas fordon på den positionen");
+				}
+			}
+			else {
+				g.printUt("Skriv Fordon Nr först\n");
+			}
+    	}
+			
+    	else if (knapp.getText().equals("Aktuellt fordon")) {
+    		System.out.println("Information om fordon");
+
+			String pos=g.gettextPos();
+			if(pos.isEmpty()==false) {									//om Fordon Nr är tomt
+				int plats = Integer.parseInt(pos);						//kan bara läsa texter, läser som ett heltal mha parseInt
+				if (0 <=plats && plats < cars.size()){
+					System.out.println("Fordon:");
+					g.printUt(cars.getFordon(plats).getAllt());
+				}
+				else {
+					g.printUt("Det saknas fordon på den positionen");	
+				}
+			}
+			else {
+				g.printUt("Skriv Fordon Nr först\n");
+			}
+    	}
+    	
+    	else if (knapp.getText().equals("Skriv alla")) {
+    		System.out.println("Hela fordonsregistret:");
+    		g.printRensa();												//tar bort tidigare data i rutan
+    		int plats = 0;
+			for (plats = 0; plats<(cars.size()); plats++){ 
+				System.out.println(cars.skrivUt(plats).getAllt());		//skriver ut alla positioner som en sträng
+				g.printUt(cars.skrivUt(plats).getAllt()+ "\n");			//använder funktion för att skriva ut
+				}
+    	}	
+    	else {
+    		System.out.println("Felaktigt val\n");
+    	}
+    }
+  
+    public void windowClosing (WindowEvent e) {
+        System.out.println("Hej då");
+        System.exit(1);
+    }
+} 
