@@ -1,0 +1,133 @@
+// pre: Måste skapa minst en ägare med fordon först
+
+import java.util.*;
+import java.awt.*;
+import javax.swing.*;
+
+public class GUI{
+	
+	//Fordonsregister fordonsregister = new Fordonsregister();		//skapar ett fordonsregister
+	
+	private JFrame f;
+	private JPanel carPanel, ownerPanel, buttonPanel, posPanel;
+	private JButton k1,k2,k3,k4;
+	private JLabel labelPos, labelTyp, labelBrand, labelReg, labelOwner, labelName, labelAge, labelMellan;
+	private JTextField textPos, textTyp, textBrand, textReg, textName, textAge;
+	private Lyssnare l;
+	private JTextArea ruta;
+	
+
+	public GUI(){
+		f=new JFrame("Fordonsregister");			//rubrik på ramen
+		carPanel=new JPanel();
+		ownerPanel=new JPanel();
+		buttonPanel=new JPanel();
+		posPanel=new JPanel();
+		
+		ruta=new JTextArea(20,70);
+		f.setLayout(new FlowLayout());
+		
+		labelPos=new JLabel("Fordon Nr: ");
+		labelTyp=new JLabel("Fordonstyp:");
+		labelBrand=new JLabel("Märke:");
+		labelReg=new JLabel("RegNr:");
+		labelOwner=new JLabel("Ägare");
+		labelName=new JLabel("Namn:");
+		labelAge=new JLabel("Ålder:");
+		
+		labelMellan=new JLabel(" ");
+		
+		textPos=new JTextField(10);			//10 tecken långa textfält
+		textTyp=new JTextField(10);
+		textBrand=new JTextField(10);
+		textReg=new JTextField(10);
+		textName=new JTextField(10);
+		textAge=new JTextField(10);
+		
+		
+		//Nu spelar ordningen roll, nu adderas det till framen i ett flöde	
+		ownerPanel.setLayout(new GridLayout(3,2));
+		ownerPanel.add(labelOwner);
+		ownerPanel.add(labelMellan);
+		ownerPanel.add(labelName);
+		ownerPanel.add(textName);
+		ownerPanel.add(labelAge);
+		ownerPanel.add(textAge);
+		f.add(ownerPanel);
+		
+		carPanel.setLayout(new GridLayout(3,2));		//3 rader, 2 kolumner
+		carPanel.add(labelTyp);
+		carPanel.add(textTyp);
+		carPanel.add(labelBrand);
+		carPanel.add(textBrand);
+		carPanel.add(labelReg);
+		carPanel.add(textReg);
+		f.add(carPanel);
+		
+		posPanel.setLayout(new GridLayout(1,1));
+		posPanel.add(labelPos);
+		posPanel.add(textPos);
+		f.add(posPanel);
+		
+		//Lyssnare
+		l=new Lyssnare(this);
+		f.addWindowListener(l);				//För att skriva ut och stänga fönstret
+		
+		k1=new JButton("Lägg till");
+		k1.addActionListener(l);		//kopplar lyssnare till knapp (alla till samma lyssnare sålänge dvs samma åtgärd oavsett knapp än)
+		k2=new JButton("Ta bort");
+		k2.addActionListener(l);
+		k3=new JButton("Aktuellt fordon");
+		k3.addActionListener(l);
+		k4=new JButton("Skriv alla");
+		k4.addActionListener(l);
+		
+		
+		buttonPanel.setLayout(new GridLayout(4,1));
+		buttonPanel.add(k1);
+		buttonPanel.add(k2);
+		buttonPanel.add(k3);
+		buttonPanel.add(k4);
+		f.add(buttonPanel);
+		
+		f.add(ruta);
+		
+		f.setSize(1000,500);			//storlek på fönster breddxlängd
+		f.setLocation(100,100);			//var på skärmen
+		f.setVisible(true);
+	}	
+	
+	//gettar information till min lyssnare
+	public String gettextName() {
+		return textName.getText();
+	} 
+	public String gettextAge() {
+		return textAge.getText();
+	} 
+	public String gettextTyp() {
+		return textTyp.getText();
+	} 
+	public String gettextBrand() {
+		return textBrand.getText();
+	} 
+	public String gettextReg() {
+		return textReg.getText();
+	} 
+	public String gettextPos() {
+		return textPos.getText();
+	} 
+	
+	public void printUt (String u) {
+        ruta.append(u);
+    }
+    public void printRensa () {
+        ruta.setText(" ");
+    }
+    public void printRensaText () {
+        textName.setText(" ");
+        textAge.setText(" ");
+        textTyp.setText(" ");
+        textBrand.setText(" ");
+        textReg.setText(" ");
+    }
+}
