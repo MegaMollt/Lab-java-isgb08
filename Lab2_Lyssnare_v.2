@@ -4,40 +4,40 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.*;
 
-public class Lyssnare extends WindowAdapter implements ActionListener {
+public class Lyssnare extends WindowAdapter implements ActionListener {		
 	Fordonsregister cars = new Fordonsregister(); 
 	private GUI g;
     
-    public Lyssnare(GUI gIn) {				//Skickar med egenskaperna från min konstruktor i Granssnitt, getfunktionerna når vi genom g nu.
+    public Lyssnare(GUI gIn) {				
        g=gIn;
     }
     
-    public void actionPerformed(ActionEvent e) {
-    	JButton knapp = (JButton)e.getSource();
+    public void actionPerformed(ActionEvent e) {			
+    	JButton knapp = (JButton)e.getSource();				
     	if (knapp.getText().equals("Lägg till")) {
     		//Lägg till fordon
     		
     		
     		String namn=g.gettextName();
     		String age=g.gettextAge();
-    		int alder = Integer.parseInt(age);
+    		int alder=Integer.parseInt(age);
     		String typ=g.gettextTyp();
     		String marke=g.gettextBrand();
     		String nr=g.gettextReg();
     		if((namn.isEmpty() || age.isEmpty() || typ.isEmpty() || marke.isEmpty() || nr.isEmpty())==false) {
     		
-    														//från gamla versionen men med nya namnen på variabler
+    														
     			if (cars.size()<cars.maxSize()) {		
-    				Person agare = new Person(namn, alder);		//kallar på konstruktor och skapar person
-    				cars.add(nr, marke, typ, agare);			//adderar
-    				g.printUt("Fordon tillagt\n");
+    				Person agare = new Person(namn, alder);		
+    				cars.add(nr, marke, typ, agare);			
+    				g.printUt("\nFordon tillagt");
 					}
     			}
     	else {
-    		g.printUt("Ange samtliga uppgifter om ägare och fordon först\n");
+    		g.printUt("\nAnge samtliga uppgifter om ägare och fordon först");
     		}
     		
-    		g.printRensaText();								//rensar textfält vid inmatning
+    		g.printRensaText();								
     	}
     	else if (knapp.getText().equals("Ta bort")) {
     		//Ta bort ett fordon
@@ -46,27 +46,27 @@ public class Lyssnare extends WindowAdapter implements ActionListener {
 			if(pos.isEmpty()==false) {
 				int plats = Integer.parseInt(pos);
 				if (0 <=plats && plats < cars.size()){
-					cars.remove(plats);							//tar bort positionen
-					g.printUt("Fordon borttaget\n");
+					cars.remove(plats);							
+					g.printUt("\nFordon borttaget");
 				}
 				else {
-					g.printUt("Det saknas fordon angiven position\n");
+					g.printUt("\nDet saknas fordon angiven position");
 				}
 			}
 			else {
-				g.printUt("Skriv Fordon Nr först\n");
+				g.printUt("\nSkriv Fordon Nr först");
 			}
     	}
 			
     	else if (knapp.getText().equals("Aktuellt fordon")) {
-    		g.printUt("Information om fordon: \n");
+    		g.printUt("\nInformation om fordon: \n");
 
 			String pos=g.gettextPos();
-			if(pos.isEmpty()==false) {									//om Fordon Nr är tomt
-				int plats = Integer.parseInt(pos);						//kan bara läsa texter, läser som ett heltal mha parseInt
+			if(pos.isEmpty()==false) {									
+				int plats = Integer.parseInt(pos);						
 				if (0 <=plats && plats < cars.size()){
-					g.printUt("Fordon\n");	
-					g.printUt(cars.getFordon(plats).getAllt());
+					g.printUt("Ägare och fordon ");	
+					g.printUt(cars.getFordon(plats).getAllt()+"finns på plats " + plats);
 				}
 				else {
 					g.printUt("Det saknas fordon på den positionen\n");	
@@ -78,20 +78,20 @@ public class Lyssnare extends WindowAdapter implements ActionListener {
     	}
     	
     	else if (knapp.getText().equals("Skriv alla")) {
-    		g.printUt("Hela fordonsregistret: \n");
-    		g.printRensa();												//tar bort tidigare data i rutan
+    		g.printUt("\nHela fordonsregistret: \n");
+    		g.printRensa();												
     		int plats = 0;
 			for (plats = 0; plats<(cars.size()); plats++){ 
-				g.printUt(cars.skrivUt(plats).getAllt()+ "\n");			//använder funktion för att skriva ut
+				g.printUt("På plats " + plats + " finns " + cars.skrivUt(plats).getAllt()+"\n");			
 				}
     	}	
     	else {
-    		g.printUt("Felaktigt val\n");
+    		g.printUt("\nFelaktigt val\n");
     	}
     }
   
     public void windowClosing (WindowEvent e) {
-        System.out.println("Stänger registret");						//Skriver ut i konsol då programmet är stängt
+        System.out.println("Stänger registret");						
         System.exit(1);
     }
 } 
