@@ -22,35 +22,28 @@ public class Lyssnare extends WindowAdapter implements ActionListener {		//Vi ka
 	public void actionPerformed(ActionEvent e) {			//eftersom jag implementerar WindowListener behövs actionPerformed. För att lyssna på gränssnittet
     	JButton knapp = (JButton)e.getSource();				// e innehåller information varför "jag kom hit". Som att vi tryckt på "Lägg till".
     	if (knapp.getText().equals("Lägg till")) {
-    		//Lägg till fordon
     		
+    		//Lägg till fordon
     		String namn=g.gettextName();
     		String age=g.gettextAge();
-    		int alder=Integer.parseInt(age);
     		String typ=g.gettextTyp();
     		String marke=g.gettextBrand();
     		String nr=g.gettextReg();
-    		if((namn.isEmpty() || age.isEmpty() || typ.isEmpty() || marke.isEmpty() || nr.isEmpty())==false) {
-    		
-    			Person agare = new Person(namn, alder);		//kallar på konstruktor och skapar person
-    			Fordon bilen= new Fordon(nr, marke, typ, agare);			//adderar
-    			g.printUt("\nFordon tillagt");
-    		}
-    	else {
-    		g.printUt("\nAnge samtliga uppgifter om ägare och fordon först");
-    		}
-    		
+
+    		g.addFordon(nr, marke, typ, namn, age);			//adderar
+    		g.printUt("\nFordon tillagt");
     		g.printRensaText();								//rensar textfält vid inmatning
     	}
+    	
     	else if (knapp.getText().equals("Ta bort")) {
+    		
     		//Ta bort ett fordon
-
 			String pos=g.gettextPos();
 			int plats = Integer.parseInt(pos);
-			bil.remove(plats);						//tar bort positionen
+			g.remFordon(plats);						//tar bort positionen
 			g.printUt("\nFordon borttaget");
 		}
-			
+			//Info om ett fordon
     	else if (knapp.getText().equals("Aktuellt fordon")) {
     		g.printUt("\nInformation om fordon: \n");
 			String pos=g.gettextPos();
@@ -58,18 +51,12 @@ public class Lyssnare extends WindowAdapter implements ActionListener {		//Vi ka
 			g.printUt("Ägare och fordon ");	
 			g.printUt(bil.getFordon(plats).getAllt()+"finns på plats " + plats);
     	}
-    	
+    		//Info om alla fordon
     	else if (knapp.getText().equals("Skriv alla")) {
     		g.printUt("\nHela fordonsregistret: \n");
     		g.printRensa();												//tar bort tidigare data i rutan
-    		int plats = 0;
-    		for (plats = 0; plats<(bil.size()); plats++){ 
-			g.printUt("På plats " + plats + " finns " + bil.skrivUt(plats).getAllt()+"\n");			//använder funktion för att skriva ut
-    		}
+    		g.allFordon();
     	}	
-    	else {
-    		g.printUt("\nFelaktigt val\n");
-    	}
     }
   
     public void windowClosing (WindowEvent e) {
