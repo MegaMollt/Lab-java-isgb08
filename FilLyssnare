@@ -1,0 +1,69 @@
+//pre: Måste skapa minst en ägare med fordon först
+//pre: Fordon Nr måste innehålla ett värde för att radera eller visa en position
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.File;
+import java.util.ArrayList;
+
+import javax.swing.*;
+
+public class FilLyssnare extends WindowAdapter implements ActionListener {		//Vi kan bara ärva en klass, förslagsvid WindowAdapter för att slippa deklarera alla dess metoder
+	private Granssnitt g;
+	private Fordonsregister bil;
+	Fordonsregister register=new Fordonsregister();
+	File f=new File("testFil.ser");
+    
+    public FilLyssnare(Granssnitt gIn, Fordonsregister cars) {				//Skickar med egenskaperna från min konstruktor i Granssnitt, getfunktionerna når vi genom g nu.
+       g=gIn;
+       bil=cars;
+    }
+  
+
+	public void actionPerformed(ActionEvent e) {			//eftersom jag implementerar WindowListener behövs actionPerformed. För att lyssna på gränssnittet
+    	JButton knapp = (JButton)e.getSource();				// e innehåller information varför "jag kom hit". Som att vi tryckt på "Lägg till".
+    	if (knapp.getText().equals("Lägg till")) {
+    		
+    		//Lägg till fordon
+    		String namn=g.gettextName();
+    		String age=g.gettextAge();
+    		String typ=g.gettextTyp();
+    		String marke=g.gettextBrand();
+    		String nr=g.gettextReg();
+
+    		g.addFordon(nr, marke, typ, namn, age);			//adderar
+    		g.printUt("\nFordon tillagt");
+    		g.printRensaText();								//rensar textfält vid inmatning
+    	}
+    	
+    	else if (knapp.getText().equals("Ta bort")) {
+    		
+    		//Ta bort ett fordon
+			String pos=g.gettextPos();
+			int plats = Integer.parseInt(pos);
+			g.remFordon(plats);						//tar bort positionen
+			g.printUt("\nFordon borttaget");
+		}
+			//Info om ett fordon
+    	else if (knapp.getText().equals("Aktuellt fordon")) {
+    		g.printUt("\nInformation om fordon: \n");
+			String pos=g.gettextPos();
+			int plats = Integer.parseInt(pos);
+			g.printUt("Ägare och fordon ");	
+			g.printUt(bil.getFordon(plats).getAllt()+"finns på plats " + plats);
+    	}
+    		//Info om alla fordon
+    	else if (knapp.getText().equals("Skriv alla")) {
+    		g.printUt("\nHela fordonsregistret: \n");
+    		g.printRensa();												//tar bort tidigare data i rutan
+    		g.allFordon();
+    	}	
+    }
+  
+    public void windowClosing (WindowEvent e) {
+        System.out.println("Stänger registret");						//Skriver ut i konsol då programmet är stängt
+        System.exit(1);
+    }
+} 
