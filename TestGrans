@@ -3,11 +3,11 @@
 import java.util.*;
 import java.awt.*;
 import javax.swing.*;
-
+import java.io.*;
 public class Granssnitt{
 	
 	Fordonsregister cars = new Fordonsregister();		//skapar ett fordonsregister
-	
+	private static final long serialVersionUID = 1L;
 	private JFrame f;
 	private JPanel carPanel, ownerPanel, buttonPanel, posPanel;
 	private JButton k1,k2,k3,k4;
@@ -75,14 +75,17 @@ public class Granssnitt{
 		l=new Lyssnare(this, cars);
 		f.addWindowListener(l);				//För att skriva ut och stänga fönstret
 		
+		//Lägg till
 		k1=new JButton("Lägg till");
 		if (cars.size()<cars.maxSize()) {
 		k1.addActionListener(l);		//kopplar lyssnare till knapp (alla till samma lyssnare sålänge dvs samma åtgärd oavsett knapp än)
 		}
 		
 		k2=new JButton("Ta bort");
+		k2.addActionListener(l);
 		
 		k3=new JButton("Aktuellt fordon");
+		k3.addActionListener(l);
 		
 		k4=new JButton("Skriv alla");
 		k4.addActionListener(l);
@@ -96,36 +99,6 @@ public class Granssnitt{
 		f.add(buttonPanel);
 		
 		f.add(Skrollis);
-		
-		//String pos = textPos.getText();
-		//int plats = Integer.parseInt(pos);
-		int plats= 0;
-		String pos= "A";
-		if(pos.isEmpty()==false) {
-			if (0 <=plats && plats < cars.size()){
-				k2.addActionListener(l);
-				}
-			else {
-				ruta.append("\nDet saknas fordon angiven position");
-			}
-		}
-		else {
-			ruta.append("\nSkriv Fordon Nr först");
-	}
-		if(pos.isEmpty()==false) {									//om Fordon Nr är tomt
-		//	plats = Integer.parseInt(pos);						//kan bara läsa texter, läser som ett heltal mha parseInt
-			
-			if (0 <=plats && plats < cars.size()){
-				k3.addActionListener(l);
-			}
-			else {
-				ruta.append("Det saknas fordon på den positionen\n");	
-			}
-		}
-		else {
-			ruta.append("Skriv Fordon Nr först\n");
-		}
-		
 		
 		f.setSize(1000,500);			//storlek på fönster breddxlängd
 		f.setLocation(100,100);			//var på skärmen
@@ -154,9 +127,51 @@ public class Granssnitt{
 		return textPos.getText();
 	} 
 	
+	public void addFordon(String regnr, String brand, String typ, String namn, String age) {
+		
+		if((namn.isEmpty() || age.isEmpty() || typ.isEmpty() || brand.isEmpty() || regnr.isEmpty())==false) {
+			int alder=Integer.parseInt(age);
+			Person agare = new Person(namn, alder);		//kallar på konstruktor och skapar person
+			cars.add(regnr, brand, typ, agare);
+		}
+		else {
+			ruta.append("\nAnge samtliga uppgifter om ägare och fordon först");
+    		}
+	}
+	
+	public void remFordon(int plats) {
+		if (0 <=plats && plats < cars.size()){
+		cars.remove(plats);
+		}
+		else {
+			ruta.append("\nDet saknas fordon angiven position");
+		}
+	}
+	
+	public void posFordon(int pos) {
+		if (0 <=pos && pos < cars.size()){
+		cars.getFordon(pos);
+		}
+		else {
+			ruta.append("Det saknas fordon på den positionen\n");	
+		}
+	}
+	
+	public void allFordon() {
+		int plats = 0;
+		for (plats = 0; plats<(cars.size()); plats++){ 
+		ruta.append("På plats " + plats + " finns " + cars.skrivUt(plats).getAllt()+"\n");
+		}
+	}
+	
 	public void printUt (String u) {
         ruta.append(u);
     }
+	
+	public void skrivPlats (int p) {
+        ruta.append(cars.getFordon(p).getAllt()+"finns på plats " + p);
+	}
+    
     public void printRensa () {
         ruta.setText(" ");					//setText(); är en metod som finns i JTextField
     }
