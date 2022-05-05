@@ -1,0 +1,170 @@
+// pre: Måste skapa minst en ägare med fordon först
+
+import java.util.*;
+import java.awt.*;
+import javax.swing.*;
+
+public class Granssnitt{
+	
+	Fordonsregister cars = new Fordonsregister();		//skapar ett fordonsregister
+	
+	private JFrame f;
+	private JPanel carPanel, ownerPanel, buttonPanel, posPanel;
+	private JButton k1,k2,k3,k4;
+	private JLabel labelPos, labelTyp, labelBrand, labelReg, labelOwner, labelName, labelAge, labelMellan;
+	private JTextField textPos, textTyp, textBrand, textReg, textName, textAge;
+	private Lyssnare l;
+	private JScrollPane Skrollis;
+	private JTextArea ruta;
+	
+
+	public Granssnitt(){									// Konstruktor för grafiskt gränssnitt
+		f=new JFrame("Fordonsregister");			//rubrik på ramen
+		carPanel=new JPanel();
+		ownerPanel=new JPanel();
+		buttonPanel=new JPanel();
+		posPanel=new JPanel();
+		ruta=new JTextArea(20,70);
+		Skrollis=new JScrollPane(ruta);
+		
+		f.setLayout(new FlowLayout());
+		
+		labelPos=new JLabel("Fordon Nr: ");
+		labelTyp=new JLabel("Fordonstyp:");
+		labelBrand=new JLabel("Märke:");
+		labelReg=new JLabel("RegNr:");
+		labelOwner=new JLabel("Ägare");
+		labelName=new JLabel("Namn:");
+		labelAge=new JLabel("Ålder:");
+		
+		labelMellan=new JLabel(" ");
+		
+		textPos=new JTextField(10);			//10 tecken långa textfält
+		textTyp=new JTextField(10);
+		textBrand=new JTextField(10);
+		textReg=new JTextField(10);
+		textName=new JTextField(10);
+		textAge=new JTextField(10);
+		
+		
+		//Nu spelar ordningen roll, nu adderas det till framen i ett flöde	
+		ownerPanel.setLayout(new GridLayout(3,2));
+		ownerPanel.add(labelOwner);
+		ownerPanel.add(labelMellan);
+		ownerPanel.add(labelName);
+		ownerPanel.add(textName);
+		ownerPanel.add(labelAge);
+		ownerPanel.add(textAge);
+		f.add(ownerPanel);
+		
+		carPanel.setLayout(new GridLayout(3,2));		//3 rader, 2 kolumner
+		carPanel.add(labelTyp);
+		carPanel.add(textTyp);
+		carPanel.add(labelBrand);
+		carPanel.add(textBrand);
+		carPanel.add(labelReg);
+		carPanel.add(textReg);
+		f.add(carPanel);
+		
+		posPanel.setLayout(new GridLayout(1,1));
+		posPanel.add(labelPos);
+		posPanel.add(textPos);
+		f.add(posPanel);
+		
+		//Lyssnare
+		l=new Lyssnare(this, cars);
+		f.addWindowListener(l);				//För att skriva ut och stänga fönstret
+		
+		k1=new JButton("Lägg till");
+		if (cars.size()<cars.maxSize()) {
+		k1.addActionListener(l);		//kopplar lyssnare till knapp (alla till samma lyssnare sålänge dvs samma åtgärd oavsett knapp än)
+		}
+		
+		k2=new JButton("Ta bort");
+		
+		k3=new JButton("Aktuellt fordon");
+		
+		k4=new JButton("Skriv alla");
+		k4.addActionListener(l);
+		
+		
+		buttonPanel.setLayout(new GridLayout(4,1));
+		buttonPanel.add(k1);
+		buttonPanel.add(k2);
+		buttonPanel.add(k3);
+		buttonPanel.add(k4);
+		f.add(buttonPanel);
+		
+		f.add(Skrollis);
+		
+		//String pos = textPos.getText();
+		//int plats = Integer.parseInt(pos);
+		int plats= 0;
+		String pos= "A";
+		if(pos.isEmpty()==false) {
+			if (0 <=plats && plats < cars.size()){
+				k2.addActionListener(l);
+				}
+			else {
+				ruta.append("\nDet saknas fordon angiven position");
+			}
+		}
+		else {
+			ruta.append("\nSkriv Fordon Nr först");
+	}
+		if(pos.isEmpty()==false) {									//om Fordon Nr är tomt
+		//	plats = Integer.parseInt(pos);						//kan bara läsa texter, läser som ett heltal mha parseInt
+			
+			if (0 <=plats && plats < cars.size()){
+				k3.addActionListener(l);
+			}
+			else {
+				ruta.append("Det saknas fordon på den positionen\n");	
+			}
+		}
+		else {
+			ruta.append("Skriv Fordon Nr först\n");
+		}
+		
+		
+		f.setSize(1000,500);			//storlek på fönster breddxlängd
+		f.setLocation(100,100);			//var på skärmen
+		f.setVisible(true);
+		
+		
+	}	
+	
+	//gettar information till min lyssnare, använder get och set för att hämta privata attribut till lyssnaren.
+	public String gettextName() {
+		return textName.getText();			//getText(); är en metod som finns i JTextField, behövs en metod för varje textfält
+	} 
+	public String gettextAge() {
+		return textAge.getText();
+	} 
+	public String gettextTyp() {
+		return textTyp.getText();
+	} 
+	public String gettextBrand() {
+		return textBrand.getText();
+	} 
+	public String gettextReg() {
+		return textReg.getText();
+	} 
+	public String gettextPos() {
+		return textPos.getText();
+	} 
+	
+	public void printUt (String u) {
+        ruta.append(u);
+    }
+    public void printRensa () {
+        ruta.setText(" ");					//setText(); är en metod som finns i JTextField
+    }
+    public void printRensaText () {
+        textName.setText(null);
+        textAge.setText(null);
+        textTyp.setText(null);
+        textBrand.setText(null);
+        textReg.setText(null);
+    }
+}
