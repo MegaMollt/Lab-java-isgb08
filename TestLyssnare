@@ -28,15 +28,16 @@ public class FilLyssnare extends WindowAdapter implements ActionListener {		//Vi
     	if (knapp.getText().equals("Lägg till")) {
 
     		if (fil.exists()) {
-   			 try {
-   	                ObjectInputStream ois=new ObjectInputStream(new FileInputStream(fil));		//andra gången programmet körs finns en fil då skapar vi en filläsare "ois"
-   	                bil = (Fordonsregister) ois.readObject();										//läser och castar till klassen "Fordonsregister" och lägger det i "bil"
-   	                ois.close();
-   	            }
-   	            catch (Exception fel) {
-   	            	System.out.println("Det gick fel i skriv alla");
-   	            }
-    		}
+				 try {
+		                ObjectInputStream ois=new ObjectInputStream(new FileInputStream(fil));		//andra gången programmet körs finns en fil då skapar vi en filläsare "ois"
+		                bil = (Fordonsregister) ois.readObject();										//läser och castar till klassen "Fordonsregister" och lägger det i "bil".
+		                g.allFordon(bil);
+		                ois.close();
+		            }
+		            catch (Exception fel) {
+		            	System.out.println("Det gick fel i starten");
+		            }
+			}
 
     		//Lägg till fordon
     	    String namn=g.gettextName();
@@ -69,6 +70,17 @@ public class FilLyssnare extends WindowAdapter implements ActionListener {		//Vi
     	
     	else if (knapp.getText().equals("Ta bort")) {
     		
+    		if (fil.exists()) {
+				 try {
+		                ObjectInputStream ois=new ObjectInputStream(new FileInputStream(fil));		//andra gången programmet körs finns en fil då skapar vi en filläsare "ois"
+		                bil = (Fordonsregister) ois.readObject();										//läser och castar till klassen "Fordonsregister" och lägger det i "bil".
+		                g.allFordon(bil);
+		                ois.close();
+		            }
+		            catch (Exception fel) {
+		            	System.out.println("Det gick fel i starten");
+		            }
+			}
 
     		//Ta bort ett fordon
 			String pos=g.gettextPos();
