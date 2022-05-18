@@ -1,19 +1,22 @@
 // pre: Måste skapa minst en ägare med fordon först
 
-import java.util.*;
+//import java.util.*;
 import java.awt.*;
+import java.io.File;
+
 import javax.swing.*;
-import java.io.*;
+//import java.io.*;
 public class Granssnitt{
 	
 	Fordonsregister cars = new Fordonsregister();		//skapar ett fordonsregister
+	//private File fil;
 	private static final long serialVersionUID = 1L;
 	private JFrame f;
 	private JPanel carPanel, ownerPanel, buttonPanel, posPanel;
 	private JButton k1,k2,k3,k4;
 	private JLabel labelPos, labelTyp, labelBrand, labelReg, labelOwner, labelName, labelAge, labelMellan;
 	private JTextField textPos, textTyp, textBrand, textReg, textName, textAge;
-	private Lyssnare l;
+	private FilLyssnare l;
 	private JScrollPane Skrollis;
 	private JTextArea ruta;
 	
@@ -72,7 +75,7 @@ public class Granssnitt{
 		f.add(posPanel);
 		
 		//Lyssnare
-		l=new Lyssnare(this, cars);
+		l=new FilLyssnare(this, cars);
 		f.addWindowListener(l);				//För att skriva ut och stänga fönstret
 		
 		//Lägg till
@@ -87,7 +90,7 @@ public class Granssnitt{
 		k3=new JButton("Aktuellt fordon");
 		k3.addActionListener(l);
 		
-		k4=new JButton("Skriv alla");
+		k4=new JButton("Skriv alla fordon");
 		k4.addActionListener(l);
 		
 		
@@ -157,7 +160,8 @@ public class Granssnitt{
 		}
 	}
 	
-	public void allFordon() {
+	public void allFordon(Fordonsregister bilfil) {
+		cars=bilfil;
 		int plats = 0;
 		for (plats = 0; plats<(cars.size()); plats++){ 
 		ruta.append("På plats " + plats + " finns " + cars.skrivUt(plats).getAllt()+"\n");
