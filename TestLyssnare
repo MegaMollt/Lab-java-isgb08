@@ -5,15 +5,17 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.ArrayList;
+import java.io.*;
+//import java.util.ArrayList;
 
 import javax.swing.*;
 
-public class Lyssnare extends WindowAdapter implements ActionListener {		//Vi kan bara ärva en klass, förslagsvid WindowAdapter för att slippa deklarera alla dess metoder
+public class FilLyssnare extends WindowAdapter implements ActionListener {		//Vi kan bara ärva en klass, förslagsvid WindowAdapter för att slippa deklarera alla dess metoder
 	private Granssnitt g;
 	private Fordonsregister bil;
+	File fil=new File("testFil.ser");
     
-    public Lyssnare(Granssnitt gIn, Fordonsregister cars) {				//Skickar med egenskaperna från min konstruktor i Granssnitt, getfunktionerna når vi genom g nu.
+    public FilLyssnare(Granssnitt gIn, Fordonsregister cars) {				//Skickar med egenskaperna från min konstruktor i Granssnitt, getfunktionerna når vi genom g nu.
        g=gIn;
        bil=cars;
     }
@@ -21,42 +23,112 @@ public class Lyssnare extends WindowAdapter implements ActionListener {		//Vi ka
 
 	public void actionPerformed(ActionEvent e) {			//eftersom jag implementerar WindowListener behövs actionPerformed. För att lyssna på gränssnittet
     	JButton knapp = (JButton)e.getSource();				// e innehåller information varför "jag kom hit". Som att vi tryckt på "Lägg till".
+    	
+    	
     	if (knapp.getText().equals("Lägg till")) {
-    		
-    		//Lägg till fordon
-    		String namn=g.gettextName();
-    		String age=g.gettextAge();
-    		String typ=g.gettextTyp();
-    		String marke=g.gettextBrand();
-    		String nr=g.gettextReg();
 
-    		g.addFordon(nr, marke, typ, namn, age);			//adderar
-    		g.printUt("\nFordon tillagt");
-    		g.printRensaText();								//rensar textfält vid inmatning
+    		if (fil.exists()) {
+   			 try {
+   	                ObjectInputStream ois=new ObjectInputStream(new FileInputStream(fil));		//andra gången programmet körs finns en fil då skapar vi en filläsare "ois"
+   	                bil = (Fordonsregister) ois.readObject();										//läser och castar till klassen "Fordonsregister" och lägger det i "bil"
+   	                ois.close();
+   	            }
+   	            catch (Exception fel) {
+   	            	System.out.println("Det gick fel i skriv alla");
+   	            }
+    		}
+
+    		//Lägg till fordon
+    	    String namn=g.gettextName();
+    	    String age=g.gettextAge();
+    	    String typ=g.gettextTyp();
+    	    String marke=g.gettextBrand();
+    	    String nr=g.gettextReg();
+
+
+    	    try {
+    	    	ObjectOutputStream oos=new ObjectOutputStream(new FileOutputStream(fil));		//skapar ett nytt objekt vid första körning och kopplar f till "testFil.ser"
+    	    	
+    	    	
+        	    g.addFordon(nr, marke, typ, namn, age);			//adderar
+        	    g.printUt("\nFordon tillagt");
+        	    g.printRensaText();								//rensar textfält vid inmatning
+
+    			oos.writeObject(bil);															//skriver till objektet
+
+        	    g.printRensa();																//tar bort tidigare data i rutan
+                g.allFordon(bil);
+
+    			oos.close();																//stänger filen för att de ska sparas
+    			}
+    	    	catch (Exception fel) {
+    	    		System.out.println("Det gick fel i lägg till");
+    	           }
+    		
     	}
     	
     	else if (knapp.getText().equals("Ta bort")) {
     		
+
     		//Ta bort ett fordon
 			String pos=g.gettextPos();
 			int plats = Integer.parseInt(pos);
-			g.remFordon(plats);						//tar bort positionen
-			g.printUt("\nFordon borttaget");
-		}
+			
+			if (fil.exists()) {
+			try {
+    	    	ObjectOutputStream oos=new ObjectOutputStream(new FileOutputStream(fil));	
+    	    	
+    	    	g.remFordon(plats);						//tar bort positionen
+    			g.printUt("\nFordon borttaget");
+    	    	
+    			oos.writeObject(bil);													
+    			oos.close();																
+    			}
+    	    	catch (Exception fel) {
+    	    		System.out.println("Det gick fel i radera");
+    	           }
+			}
+    	}
 			//Info om ett fordon
     	else if (knapp.getText().equals("Aktuellt fordon")) {
     		g.printUt("\nInformation om fordon: \n");
-			String pos=g.gettextPos();
-			int plats = Integer.parseInt(pos);
-			g.printUt("Ägare och fordon ");	
-			g.printUt(bil.getFordon(plats).getAllt()+"finns på plats " + plats);
+
+			if (fil.exists()) {
+				 try {
+		                ObjectInputStream ois=new ObjectInputStream(new FileInputStream(fil));			//andra gången programmet körs finns en fil då skapar vi en filläsare "ois"
+		                bil = (Fordonsregister) ois.readObject();										//läser och castar till klassen "Fordonsregister" och lägger det i "bil".
+		                
+		    			String pos=g.gettextPos();
+		    			int plats = Integer.parseInt(pos);
+		    			g.printUt("Ägare och fordon ");	
+		    			g.printUt(bil.getFordon(plats).getAllt()+"finns på plats " + plats);
+		                
+		                ois.close();
+		            }
+		            catch (Exception fel) {
+		            	System.out.println("Det gick fel i aktuellt");
+		            }
+			}
     	}
     		//Info om alla fordon
-    	else if (knapp.getText().equals("Skriv alla")) {
-    		g.printUt("\nHela fordonsregistret: \n");
-    		g.printRensa();												//tar bort tidigare data i rutan
-    		g.allFordon();
-    	}	
+    	else if (knapp.getText().equals("Skriv alla fordon")) {
+    		g.printUt("\nNya fordon i fordonsregistret: \n");
+																
+    		if (fil.exists()) {
+				 try {
+		                ObjectInputStream ois=new ObjectInputStream(new FileInputStream(fil));		//andra gången programmet körs finns en fil då skapar vi en filläsare "ois"
+		                bil = (Fordonsregister) ois.readObject();										//läser och castar till klassen "Fordonsregister" och lägger det i "bil".
+
+		        	    g.printRensa();																//tar bort tidigare data i rutan
+		                g.allFordon(bil);
+		               
+		                ois.close();
+		            }
+		            catch (Exception fel) {
+		            	System.out.println("Det gick fel i skriv alla");
+		            }
+			}
+    	}
     }
   
     public void windowClosing (WindowEvent e) {
