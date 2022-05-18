@@ -8,7 +8,7 @@ import javax.swing.*;
 //import java.io.*;
 public class Granssnitt{
 	
-	Fordonsregister cars = new Fordonsregister();		//skapar ett fordonsregister
+	Fordonsregister cars = new Fordonsregister();		
 	//private File fil;
 	private static final long serialVersionUID = 1L;
 	private JFrame f;
@@ -21,8 +21,8 @@ public class Granssnitt{
 	private JTextArea ruta;
 	
 
-	public Granssnitt(){									// Konstruktor för grafiskt gränssnitt
-		f=new JFrame("Fordonsregister");			//rubrik på ramen
+	public Granssnitt(){									
+		f=new JFrame("Fordonsregister");			
 		carPanel=new JPanel();
 		ownerPanel=new JPanel();
 		buttonPanel=new JPanel();
@@ -42,7 +42,7 @@ public class Granssnitt{
 		
 		labelMellan=new JLabel(" ");
 		
-		textPos=new JTextField(10);			//10 tecken långa textfält
+		textPos=new JTextField(10);			
 		textTyp=new JTextField(10);
 		textBrand=new JTextField(10);
 		textReg=new JTextField(10);
@@ -60,7 +60,7 @@ public class Granssnitt{
 		ownerPanel.add(textAge);
 		f.add(ownerPanel);
 		
-		carPanel.setLayout(new GridLayout(3,2));		//3 rader, 2 kolumner
+		carPanel.setLayout(new GridLayout(3,2));		
 		carPanel.add(labelTyp);
 		carPanel.add(textTyp);
 		carPanel.add(labelBrand);
@@ -76,12 +76,12 @@ public class Granssnitt{
 		
 		//Lyssnare
 		l=new FilLyssnare(this, cars);
-		f.addWindowListener(l);				//För att skriva ut och stänga fönstret
+		f.addWindowListener(l);				
 		
 		//Lägg till
 		k1=new JButton("Lägg till");
 		if (cars.size()<cars.maxSize()) {
-		k1.addActionListener(l);		//kopplar lyssnare till knapp (alla till samma lyssnare sålänge dvs samma åtgärd oavsett knapp än)
+		k1.addActionListener(l);		
 		}
 		
 		k2=new JButton("Ta bort");
@@ -103,16 +103,15 @@ public class Granssnitt{
 		
 		f.add(Skrollis);
 		
-		f.setSize(1000,500);			//storlek på fönster breddxlängd
-		f.setLocation(100,100);			//var på skärmen
+		f.setSize(1000,500);			
+		f.setLocation(100,100);			
 		f.setVisible(true);
 		
 		
 	}	
 	
-	//gettar information till min lyssnare, använder get och set för att hämta privata attribut till lyssnaren.
 	public String gettextName() {
-		return textName.getText();			//getText(); är en metod som finns i JTextField, behövs en metod för varje textfält
+		return textName.getText();			
 	} 
 	public String gettextAge() {
 		return textAge.getText();
@@ -134,7 +133,7 @@ public class Granssnitt{
 		
 		if((namn.isEmpty() || age.isEmpty() || typ.isEmpty() || brand.isEmpty() || regnr.isEmpty())==false) {
 			int alder=Integer.parseInt(age);
-			Person agare = new Person(namn, alder);		//kallar på konstruktor och skapar person
+			Person agare = new Person(namn, alder);		
 			cars.add(regnr, brand, typ, agare);
 		}
 		else {
